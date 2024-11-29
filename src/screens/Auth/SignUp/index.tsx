@@ -1,20 +1,19 @@
-import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, StyleSheet, View, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Formik } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
 import SignUpForm from '../../../components/complex/Forms/SignUpForm';
-import {showAlert} from '../../../redux/authSlice';
-import {useRedux} from '../../../hooks/UseRedux';
-import CustomAlert from '../../../components/primitive/AppAlert';
-import {useNavigation} from '@react-navigation/native';
-import {View} from 'react-native';
-import {Formik} from 'formik';
-import {Image} from 'react-native';
 import {
   SignUpValidationSchema,
   signUpValue,
 } from '../../../shared/utils/validation';
-import {RootStackParamList} from '../../../navigation/Types';
-import {StackNavigationProp} from '@react-navigation/stack';
-const ImageUrl = '../../../assets/images/alert/createAccount.png';
+import { setLogInUser } from '../../../redux/authSlice/userSlice';
+import { RootStackParamList } from '../../../navigation/Types';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useGetUserQuery } from '../../../redux/authSlice';
+import { useRedux } from '../../../hooks/UseRedux';
+
 
 type AuthStackNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -23,27 +22,28 @@ type AuthStackNavigationProp = StackNavigationProp<
 
 const SignUp = () => {
   const navigation = useNavigation<AuthStackNavigationProp>();
-  const {storeState, dispatch} = useRedux();
+  const dispatch = useDispatch();
+  const { data } = useGetUserQuery(); // Fetch user data
+  const [signUpData, setSignUpData] = useState<any>([]);
+  const { storeState } = useRedux();
 
-  const user = storeState?.authSlice?.user;
-
-  interface AuthSlice {
-    email: string;
-    password: string;
-  }
-
-  const handleLogin = (values: AuthSlice) => {
-    if (
-      values.email == user?.email &&
-      values.password == storeState?.authSlice?.user?.password
-    ) {
-      navigation.replace('MainApp', {
-        email: values.email,
-        password: values.password,
-      });
-    } else {
-      dispatch(showAlert({}));
+  useEffect(() => {
+    if (data) {
+      setSignUpData(data);
     }
+  }, [data]);
+
+  // useEffect(() => {
+  //   console.log(storeState);
+  // }, [storeState]);
+
+  const handleLogin = (values: any) => {
+    signUpData?.map((item: any) => {
+      if (item.values.email == values.email) {
+        dispatch(setLogInUser(item));
+        navigation.navigate('MainApp');
+      }
+    });
   };
 
   return (
@@ -79,8 +79,6 @@ const SignUp = () => {
           )}
         </Formik>
       </View>
-
-      <CustomAlert image={ImageUrl} />
     </View>
   );
 };
@@ -94,10 +92,8 @@ const styles = StyleSheet.create({
     width: 250,
     height: 200,
     alignSelf: 'center',
-    objectFit: 'contain',
     zIndex: 832,
   },
-
   ImageContainer: {
     flex: 1,
     position: 'relative',

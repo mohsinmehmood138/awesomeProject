@@ -1,114 +1,70 @@
-import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-export const fetchData = createAsyncThunk(
-  'data/fetchData',
-  async (endpoint: string, thunkAPI) => {
-    try {
-      const response = await fetch(endpoint, {
+
+const apiSlice = createApi({
+
+
+  reducerPath: 'api',
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'https://67487a0a5801f5153591121f.mockapi.io/data/',
+  }),
+
+
+
+  tagTypes: ['Users'],
+  endpoints: (builder) => ({
+    fetchData: builder.query<any, string>({
+      query: (endpoint) => endpoint,
+      providesTags: (result) => (result ? [{ type: 'Users', id: 'LIST' }] : []),
+    }),
+
+
+    createUser: builder.mutation<void, { name: string; password: string; email: string }>({
+      query: (newUser) => ({
+        url: 'users',
+        method: 'POST',
+        body: newUser,
+      }),
+      invalidatesTags: [{ type: 'Users', id: 'LIST' }],
+    }),
+
+
+    deleteUser: builder.mutation<void, string>({
+      query: (userId) => ({
+        url: `users/${userId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: [{ type: 'Users', id: 'LIST' }],
+    }),
+
+
+    updateUserName: builder.mutation<void, { userId: string; newName: string }>({
+      query: ({ userId, newName }) => ({
+        url: `users/${userId}`,
+        method: 'PATCH',
+        body: { realName: newName },
+      }),
+      invalidatesTags: [{ type: 'Users', id: 'LIST' }],
+    }),
+
+
+
+    getUser: builder.query<any, void>({
+      query: () => ({
+        url: 'users',
         method: 'GET',
-      });
-      const data = await response.json();
-      return data;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
-interface User {
-  name: string;
-  password: string;
-  email: string;
-}
-
-interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
-  isAlertOpen: boolean;
-  data: any;
-  loading: boolean;
-  error: string | null;
-}
-
-const initialState: AuthState = {
-  user: null,
-  isAuthenticated: false,
-  isAlertOpen: false,
-  data: null,
-  loading: false,
-  error: null,
-};
-
-const authSlice = createSlice({
-  name: 'authSlice',
-  initialState,
-  reducers: {
-    createUser(state, action: PayloadAction<User>) {
-      state.user = action.payload;
-      state.isAuthenticated = true;
-    },
-
-    removeUser(state) {
-      state.user = null;
-      state.isAuthenticated = false;
-    },
-
-    showAlert(state) {
-      state.isAlertOpen = true;
-    },
-
-    hideAlert(state) {
-      state.isAlertOpen = false;
-    },
-
-    onDeleteUser(state, action: PayloadAction) {
-      state.data.users = state.data.users.filter(
-        user => user.userId !== action.payload,
-      );
-    },
-
-    onUpdateUserName(
-      state,
-      action: PayloadAction<{userId: string; newName: string}>,
-    ) {
-      if (state.data?.users) {
-        const userIndex = state.data.users.findIndex(
-          user => user.userId === action.payload.userId,
-        );
-
-        if (userIndex !== -1) {
-          state.data.users[userIndex] = {
-            ...state.data.users[userIndex],
-            realName: action.payload.newName,
-          };
-        }
-      }
-    },
-  },
-
-  extraReducers: builder => {
-    builder
-      .addCase(fetchData.pending, state => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchData.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = action.payload;
-      })
-      .addCase(fetchData.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
-  },
+      }),
+      providesTags: (result) => (result ? [{ type: 'Users', id: 'LIST' }] : []),
+    })
+  }),
 });
 
 export const {
-  createUser,
-  hideAlert,
-  showAlert,
-  removeUser,
-  onDeleteUser,
-  onUpdateUserName,
-} = authSlice.actions;
-export default authSlice.reducer;
+  useFetchDataQuery,
+  useCreateUserMutation,
+  useDeleteUserMutation,
+  useUpdateUserNameMutation,
+  useGetUserQuery,
+} = apiSlice;
+
+export default apiSlice;
