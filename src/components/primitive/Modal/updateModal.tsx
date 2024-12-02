@@ -7,43 +7,33 @@ import {
   StyleSheet,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { useRedux } from '../../../hooks/UseRedux';
-import { onUpdateUserName } from '../../../redux/authSlice';
 
-interface EditModalProps {
+interface UpdateModalProps {
   isVisible: boolean;
   onCancel: () => void;
   onConfirm: (newName: string) => void;
-  modalData: any;
-  closePopup: () => any;
+  updateModalData: any;
+  onClose: () => void;
 }
 
-const EditModal: React.FC<EditModalProps> = ({
+const UpdateModal: React.FC<UpdateModalProps> = ({
   isVisible,
   onCancel,
   onConfirm,
-  modalData,
-  closePopup,
+  updateModalData,
+  onClose,
 }) => {
-  const [updatedName, setUpdatedName] = useState('');
-  const { storeState, dispatch } = useRedux();
+  const [updatedName, setUpdatedName] = useState(updateModalData?.realName || '');
 
   useEffect(() => {
-    setUpdatedName(modalData?.realName || '');
-  }, [modalData]);
+    setUpdatedName(updateModalData?.realName || '');
+  }, [updateModalData]);
 
-  const handleConfirm = () => {
-
-    dispatch(onUpdateUserName({
-      userId: modalData?.userId,
-      newName: updatedName
-    }));
-
-
-    onConfirm(updatedName);
-
-
-    closePopup();
+  const handleUpdate = () => {
+    if (updatedName.trim()) {
+      onConfirm(updatedName);
+      onClose();
+    }
   };
 
   const updateUserValue = (newValue: string) => {
@@ -69,9 +59,7 @@ const EditModal: React.FC<EditModalProps> = ({
           <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.confirmButton}
-            onPress={handleConfirm}>
+          <TouchableOpacity style={styles.confirmButton} onPress={handleUpdate}>
             <Text style={styles.buttonText}>Ok</Text>
           </TouchableOpacity>
         </View>
@@ -79,7 +67,6 @@ const EditModal: React.FC<EditModalProps> = ({
     </Modal>
   );
 };
-
 
 const styles = StyleSheet.create({
   modal: {
@@ -148,4 +135,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditModal;
+export default UpdateModal;

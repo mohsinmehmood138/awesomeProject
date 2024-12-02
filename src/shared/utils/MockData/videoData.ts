@@ -1,5 +1,4 @@
 const videoData = [
- 
   {
     id: '1',
     title: 'For Bigger Blazes',
@@ -72,10 +71,6 @@ const videoData = [
     subscriber: '25254545 Subscribers',
     isLive: true,
   },
- 
-  
 ];
-
-
 
 export default videoData;

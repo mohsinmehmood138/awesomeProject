@@ -1,63 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet, View, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React from 'react';
 import { Formik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
-import SignUpForm from '../../../components/complex/Forms/SignUpForm';
-import {
-  SignUpValidationSchema,
-  signUpValue,
-} from '../../../shared/utils/validation';
-import { setLogInUser } from '../../../redux/authSlice/userSlice';
-import { RootStackParamList } from '../../../navigation/Types';
+import { StyleSheet } from 'react-native';
+import { View, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useGetUserQuery } from '../../../redux/authSlice';
-import { useRedux } from '../../../hooks/UseRedux';
+import { RootStackParamList } from '../../../navigation/Types';
+import SignUpForm from '../../../components/complex/Forms/SignUpForm.tsx';
+import { useCreateUserMutation } from '../../../redux/authSlice/index.tsx';
+import { SignUpSchema, SignUpValues } from '../../../shared/utils/validation';
 
+interface AuthSlice {
+  name: string;
+  password: string;
+  confirmPassword: string;
+  email: string;
+}
 
 type AuthStackNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'MainApp'
+  'SignIn'
 >;
 
 const SignUp = () => {
   const navigation = useNavigation<AuthStackNavigationProp>();
-  const dispatch = useDispatch();
-  const { data } = useGetUserQuery(); // Fetch user data
-  const [signUpData, setSignUpData] = useState<any>([]);
-  const { storeState } = useRedux();
+  const [createUser] = useCreateUserMutation();
 
-  useEffect(() => {
-    if (data) {
-      setSignUpData(data);
-    }
-  }, [data]);
-
-  // useEffect(() => {
-  //   console.log(storeState);
-  // }, [storeState]);
-
-  const handleLogin = (values: any) => {
-    signUpData?.map((item: any) => {
-      if (item.values.email == values.email) {
-        dispatch(setLogInUser(item));
-        navigation.navigate('MainApp');
-      }
-    });
+  const handleSignUp = (values: AuthSlice) => {
+    createUser({values});
+    navigation.navigate('SignIn');
   };
 
   return (
     <View style={styles.container}>
       <Image
-        style={styles.image}
-        source={require('../../../assets/images/Auth/auth.png')}
-        alt="image"
+        source={require('../../../assets/images/Auth/userInfo.png')}
+        style={styles.signUpImage}
       />
-      <View style={styles.ImageContainer}>
+      <View style={{ flex: 1, marginTop: 40 }}>
         <Formik
-          initialValues={signUpValue}
-          validationSchema={SignUpValidationSchema}
-          onSubmit={handleLogin}>
+          initialValues={SignUpValues}
+          validationSchema={SignUpSchema}
+          onSubmit={handleSignUp}>
           {({
             values,
             errors,
@@ -85,19 +68,13 @@ const SignUp = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'white',
+    height: '100%',
   },
-  image: {
+  signUpImage: {
     width: 250,
     height: 200,
+    objectFit: 'contain',
     alignSelf: 'center',
-    zIndex: 832,
-  },
-  ImageContainer: {
-    flex: 1,
-    position: 'relative',
-    top: -50,
   },
 });
 

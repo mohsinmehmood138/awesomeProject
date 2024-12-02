@@ -1,49 +1,35 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, Alert } from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
-import { useRedux } from '../../../hooks/UseRedux';
 import { LogOutButton } from '../AppButton';
-import { useDeleteUserMutation } from '../../../redux/authSlice';
-
+import { useRedux } from '../../../hooks/UseRedux';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import NotificationToggle from '../AppButton/toggleButton';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../navigation/Types';
+import { logOutUser } from '../../../redux/authSlice/userSlice';
 
 type AuthStackNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'SignUp'
+  'SignIn'
 >;
 
 const CustomDrawerContent: React.FC<DrawerContentComponentProps> = props => {
   const { user, dispatch } = useRedux();
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [deleteUser] = useDeleteUserMutation();
 
-  const toggleSwitch = () => {
-    setIsEnabled(previousState => !previousState);
-  };
-
-  const profileName = user?.values?.name;
-  const profileEmail = user?.values?.email;
-  const userId = user?.id
+  const profileName = user?.values?.name || 'Guest';
+  const profileEmail = user?.values?.email || 'guest@example.com';
+  const userId = user?.id;
 
   const navigation = useNavigation<AuthStackNavigationProp>();
 
-  const logoutSession = (userId: string) => {
-    deleteUser(userId)
-      .unwrap()
-      .then(() => {
-        Alert.alert('User deleted successfully');
-      })
-      .catch(err => {
-        Alert.alert('Error deleting user', err.message);
-      });
-    navigation.replace('SignUp');
+  const logoutSession = (userId: string | undefined) => {
+    dispatch(logOutUser());
+    navigation.replace('SignIn');
   };
 
   return (
@@ -63,7 +49,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = props => {
       <LogOutButton
         title="Log Out"
         style={styles.logOutButton}
-        onPress={()=>logoutSession(userId)}
+        onPress={() => logoutSession(userId)}
       />
     </View>
   );
@@ -86,6 +72,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#000',
   },
   userEmail: {
     fontSize: 14,
@@ -94,9 +81,8 @@ const styles = StyleSheet.create({
   logOutButton: {
     position: 'absolute',
     bottom: 20,
-    left: 0,
-    right: 0,
-    marginHorizontal: 20,
+    left: 20,
+    right: 20,
   },
 });
 

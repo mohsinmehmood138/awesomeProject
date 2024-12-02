@@ -1,17 +1,22 @@
 import React from 'react';
-import {TextInput, View, Text, StyleSheet} from 'react-native';
+import { TextInput, View, Text, StyleSheet } from 'react-native';
 
 interface InputProps {
   value?: string;
-  onChangeText: (text:any) => void;
+  onChangeText: (text: any) => void;
   placeholder: string;
   secureTextEntry?: boolean;
-  name?: string;
-  keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad' | 'decimal-pad' | 'url' | 'visible-password';
+  keyboardType?:
+    | 'default'
+    | 'email-address'
+    | 'numeric'
+    | 'phone-pad'
+    | 'decimal-pad'
+    | 'url'
+    | 'visible-password';
   errors?: string;
   onBlur?: (field: string) => void;
   containerStyle?: object;
-  editable: boolean;
 }
 
 const CustomInput: React.FC<InputProps> = ({
@@ -19,12 +24,7 @@ const CustomInput: React.FC<InputProps> = ({
   onChangeText,
   placeholder,
   secureTextEntry,
-  name,
   keyboardType,
-  editable,
-  errors,
-  onBlur,
-  containerStyle,
 }) => {
   return (
     <View style={styles.container}>
@@ -33,7 +33,6 @@ const CustomInput: React.FC<InputProps> = ({
       </Text>
       <View style={styles.inputContainer}>
         <TextInput
-       
           style={styles.input}
           value={value}
           onChangeText={onChangeText}
@@ -41,7 +40,6 @@ const CustomInput: React.FC<InputProps> = ({
           secureTextEntry={secureTextEntry}
           placeholderTextColor="#aaa"
           keyboardType={keyboardType}
-          editable={editable}
         />
       </View>
     </View>

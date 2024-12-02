@@ -1,28 +1,23 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
-import {useRedux} from '../../../hooks/UseRedux';
-import {onDeleteUser} from '../../../redux/authSlice';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 
 interface DeleteModalProps {
   isVisible: boolean;
   onCancel: () => void;
-  closePopup: () => any;
-  modalData: any;
-  setDeleteModalVisible: () => boolean;
+
+  setDeleteModalVisible: (item: any) => any;
+  onDelete: () => void;
+  onPopupClose: () => void;
 }
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
   isVisible,
   onCancel,
-  modalData,
-  closePopup,
+  onPopupClose,
   setDeleteModalVisible,
 }) => {
-  const {storeState, dispatch} = useRedux();
-
   const onDelete = () => {
-    dispatch(onDeleteUser(modalData.userId));
-    closePopup();
+    onPopupClose();
     setDeleteModalVisible(false);
   };
 

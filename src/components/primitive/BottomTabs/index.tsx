@@ -1,13 +1,12 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import HomeScreen from '../../../navigation/BottomTabs/homeTab';
-import ProfileScreen from '../../../navigation/BottomTabs/profileTab';
-import SettingScreen from '../../../navigation/BottomTabs/settingTab';
-import SearchScreen from '../../../navigation/BottomTabs/searchTab';
+import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {View} from 'react-native';
+import HomeScreen from '../../../navigation/BottomTabs/homeTab';
 import UploadImages from '../../../navigation/BottomTabs/walletTab';
-import {boolean} from 'yup';
+import SearchScreen from '../../../navigation/BottomTabs/searchTab';
+import SettingScreen from '../../../navigation/BottomTabs/settingTab';
+import ProfileScreen from '../../../navigation/BottomTabs/profileTab';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Tab = createBottomTabNavigator();
 let iconName: string;
@@ -15,7 +14,7 @@ let iconName: string;
 export default function TabNavigator() {
   return (
     <Tab.Navigator
-      screenOptions={({route}): any => ({
+      screenOptions={({ route }): any => ({
         tabBarStyle: {
           width: '90%',
           position: 'fixed',
@@ -23,7 +22,7 @@ export default function TabNavigator() {
           bottom: 15,
           borderRadius: 50,
           shadowColor: '#000',
-          shadowOffset: {width: 0, height: 2},
+          shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.25,
           shadowRadius: 4,
           elevation: 5,
@@ -33,7 +32,7 @@ export default function TabNavigator() {
 
         headerShown: false,
 
-        tabBarIcon: ({focused}: {focused: boolean}) => {
+        tabBarIcon: ({ focused }: { focused: boolean }) => {
           switch (route.name) {
             case 'Home':
               iconName = focused ? 'home' : 'home-outline';
@@ -67,7 +66,7 @@ export default function TabNavigator() {
                 name={iconName}
                 size={24}
                 color={focused ? 'white' : 'black'}
-                style={{position: 'absolute', zIndex: 1, alignSelf: 'center'}}
+                style={{ position: 'absolute', zIndex: 1, alignSelf: 'center' }}
               />
               ;
             </View>

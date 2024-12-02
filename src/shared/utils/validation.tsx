@@ -3,46 +3,44 @@ import * as Yup from 'yup';
 const emailFormat = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const nameFormat = /^[A-Za-z][A-Za-z0-9]*$/;
 
-interface SignUpscript{
-  email: string,
-  password: string,
+interface SignInscript {
+  email: string;
+  password: string;
 }
 
-const signUpValue:SignUpscript = {
+const signInValue: SignInscript = {
   email: '',
   password: '',
 };
 
-
-
-interface InfoScript{
-  email: string,
-  name: string,
-  password:string,
-  confirmPassword:string 
+interface SignUpScript {
+  email: string;
+  name: string;
+  password: string;
+  confirmPassword: string;
 }
 
-const userInfo :InfoScript= {
+const SignUpValues: SignUpScript = {
   email: '',
   name: '',
   password: '',
-  confirmPassword:'' 
+  confirmPassword: '',
 };
 
-const SignUpValidationSchema = Yup.object({
+const SignInValidationSchema = Yup.object({
   email: Yup.string()
-    .email('Invalid email address') 
-    .matches(emailFormat, 'Email format is invalid') 
+    .email('Invalid email address')
+    .matches(emailFormat, 'Email format is invalid')
     .required('Required'),
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters')
     .required('Required'),
 });
 
-const UserInfoSchema = Yup.object({
+const SignUpSchema = Yup.object({
   email: Yup.string()
-    .email('Invalid email address') 
-    .matches(emailFormat, 'Email format is invalid') 
+    .email('Invalid email address')
+    .matches(emailFormat, 'Email format is invalid')
     .required('Required'),
   name: Yup.string().matches(nameFormat, 'Invalid Name').required('Required'),
 
@@ -54,4 +52,4 @@ const UserInfoSchema = Yup.object({
     .required('Required'),
 });
 
-export {SignUpValidationSchema, UserInfoSchema, signUpValue, userInfo};
+export { SignInValidationSchema, SignUpSchema, signInValue, SignUpValues };

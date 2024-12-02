@@ -1,55 +1,57 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DeleteModal from './deleteModal';
-import EditModal from './updateUserModal';
+import UpdateModal from './updateModal';
 
-interface DeleteInfo {
-  isDeleteEditModalVisible: boolean;
-  position: {x: number; y: number};
+interface PopUpEditProps {
+  isPopupVisible: boolean;
+  position: { x: number; y: number };
   onClose: () => void;
-  editableModa: boolean;
-  modalData: any;
-  closePopup: () => any;
+  isEditable: boolean;
+  updateModalData: any;
+  onPopupClose: () => void;
+  closePopup:() => void
 }
 
-const PopUpEdit: React.FC<DeleteInfo> = ({
-  isDeleteEditModalVisible,
+const PopUpEdit: React.FC<PopUpEditProps> = ({
+  isPopupVisible,
   position,
   onClose,
-  editableModa,
-  modalData,
-  closePopup,
+  isEditable,
+  updateModalData,
+  onPopupClose,
+  
 }) => {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditModalVisible, setEditModalVisible] = useState(false);
 
-  const showModal = () => {
-    setIsModalVisible(true);
-    closePopup();
+  const showEditModal = () => {
+    setEditModalVisible(true);
+    onPopupClose();
   };
 
-  const hideModal = () => {
-    setIsModalVisible(false);
+  const hideEditModal = () => {
+    setEditModalVisible(false);
   };
 
-  const handleConfirm = (newName: string) => {
-    hideModal();
+  const handleEditConfirm = (newName: string) => {
+    hideEditModal();
   };
 
   const handleDelete = () => {
     setDeleteModalVisible(false);
   };
 
-  const handleCancel = () => {
+  const handleDeleteCancel = () => {
     setDeleteModalVisible(false);
   };
 
   return (
     <>
       <Modal
-        isVisible={isDeleteEditModalVisible}
+        isVisible={isPopupVisible}
         onBackdropPress={onClose}
         backdropOpacity={0}
         animationIn="slideInRight"
@@ -63,17 +65,16 @@ const PopUpEdit: React.FC<DeleteInfo> = ({
           top: position.y - 50,
           left: position.x - 120,
         }}>
-        <View style={styles.popupContainer}>
-          {editableModa ? (
+        <View style={styles.container}>
+          {isEditable && (
             <>
-              <TouchableOpacity style={styles.option} onPress={showModal}>
+              <TouchableOpacity style={styles.option} onPress={showEditModal}>
                 <Icon name="edit" size={24} color="#4caf50" />
                 <Text style={styles.optionText}>Edit</Text>
               </TouchableOpacity>
               <View style={styles.divider} />
             </>
-          ) : null}
-
+          )}
           <TouchableOpacity
             style={styles.option}
             onPress={() => setDeleteModalVisible(true)}>
@@ -85,31 +86,30 @@ const PopUpEdit: React.FC<DeleteInfo> = ({
 
       <DeleteModal
         isVisible={isDeleteModalVisible}
-        onCancel={handleCancel}
+        onCancel={handleDeleteCancel}
         onDelete={handleDelete}
-        modalData={modalData}
-        closePopup={closePopup}
+        onPopupClose={onPopupClose}
         setDeleteModalVisible={setDeleteModalVisible}
       />
-      <EditModal
-        isVisible={isModalVisible}
-        onCancel={hideModal}
-        onConfirm={handleConfirm}
-        modalData={modalData}
-        closePopup={closePopup}
+      <UpdateModal
+        isVisible={isEditModalVisible}
+        onCancel={hideEditModal}
+        onConfirm={handleEditConfirm}
+        updateModalData={updateModalData}
+        onClose={onPopupClose}
       />
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  popupContainer: {
+  container: {
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 15,
-    elevation: 5, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
-    shadowOffset: {width: 0, height: 2},
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     width: 150,

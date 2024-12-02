@@ -2,7 +2,8 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import authSlice from './authSlice/userSlice';
-import apiSlice from "../redux/authSlice/index"
+import apiSlice from "../redux/authSlice/index" 
+import searchSlice from './searchSlice/searchSlice';
 
 // Persist configuration
 const persistConfig = {
@@ -13,8 +14,9 @@ const persistConfig = {
 
 // Combine reducers
 const rootReducer = combineReducers({
-  authSlice, // the key will be authSlice, which is where you store your auth data
-  [apiSlice.reducerPath]: apiSlice.reducer, // API slice if you're using RTK Query
+  authSlice,
+  [apiSlice.reducerPath]: apiSlice.reducer,  
+  [searchSlice.reducerPath]:searchSlice.reducer
 });
 
 // Create persisted reducer
@@ -28,7 +30,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
       },
-    }).concat(apiSlice.middleware), // Add RTK Query middleware if needed
+    }).concat(apiSlice.middleware ,searchSlice.middleware), 
 });
 
 // Type for the root state

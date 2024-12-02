@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,62 +6,74 @@ import {
   ScrollView,
   Image,
   FlatList,
+  Alert,
 } from 'react-native';
-import {StyleSheet} from 'react-native';
-import {IconButton} from 'react-native-paper';
-import UserSearchModal from '../../components/primitive/Modal/otherUserProfile';
-import {fetchData} from '../../redux/authSlice';
-import {useDispatch, useSelector} from 'react-redux';
-import {useRedux} from '../../hooks/UseRedux';
+import { StyleSheet } from 'react-native';
+import { IconButton } from 'react-native-paper';
 import Divider from '../../components/primitive/AppDivider';
-import PopUpEdit from '../../components/primitive/Modal/popUp';
+import EditPopUp from '../../components/primitive/Modal/editPopUp';
+import { useGetUserQuery } from '../../redux/searchSlice/searchSlice';
+import OtherUserProfileModal from '../../components/primitive/Modal/usersProfileModal';
+
+
+interface UserItemProps {
+  item: any
+  openModal: (item: any) => void;
+}
+
 
 export default function SearchScreen() {
-  const {storeState, dispatch} = useRedux();
+  const { data } = useGetUserQuery();
+  const [updateModalData, setUpdateModalData] = useState(null);
+  const [searchTabData,setSearchTabData]=useState<any>([])
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [userProfileData, setUserProfileData] = useState(false);
+  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
 
-  const [modalData, setModalData] = useState();
-  const [isPopupVisible, setPopupVisible] = useState(false);
-  const [popupPosition, setPopupPosition] = useState({x: 0, y: 0});
+
+  useEffect(() => {
+    if (data) {
+      setSearchTabData(data)
+    }
+  }, [data]);
 
   const handleButtonPress = (event: any, item: any) => {
-    const {pageX, pageY} = event.nativeEvent;
-    setPopupPosition({x: pageX, y: pageY});
-    setPopupVisible(true);
-    setModalData(item);
-    
-    
+   
+    const { pageX, pageY } = event.nativeEvent;
+    setPopupPosition({ x: pageX, y: pageY });
+    setIsPopupVisible(true);
+    setUpdateModalData(item);
   };
 
   const closePopup = () => {
-    setPopupVisible(false);
+    setIsPopupVisible(false);
   };
 
-  useEffect(() => {
-    dispatch(fetchData('https://dummyjson.com/c/343b-beae-4fd5-a859'));
-  }, []);
-
-  const openModal = (item: any) => {
+  const handleOtherUser = (item: any) => {
+    setUserProfileData(item)
     setModalVisible(true);
-    setModalData(item);
+    console.log(item);
+    
+
   };
 
   const closeModal = () => {
     setModalVisible(false);
   };
 
-  const UserItem = ({item, openModal}) => {
+  const UserItem:React.FC<UserItemProps>= ({ item, openModal })=> {
     return (
       <TouchableOpacity
         style={styles.searchFlatList}
-        onPress={() => openModal(item)}>
-        <View style={{flexDirection: 'row'}}>
+        onPress={() => handleOtherUser(item)}>
+        <View style={{ flexDirection: 'row' }}>
           <Image
             style={styles.searchFlatListImage}
-            source={{uri: item.profilePic}}
+            source={{ uri: item.profilePic }}
             alt="Image"
           />
-          <View style={{alignSelf: 'center'}}>
+          <View style={{ alignSelf: 'center' }}>
             <Text style={styles.searchFlatListText}>{item.realName}</Text>
             <Text style={styles.searchFlatListTextUserId}>
               @{item.username}
@@ -72,7 +84,7 @@ export default function SearchScreen() {
           <IconButton
             icon="dots-vertical"
             size={20}
-            onPress={event => handleButtonPress(event, item)}
+            onPress={ (event)=>handleButtonPress(event, item)}
           />
         </View>
       </TouchableOpacity>
@@ -85,29 +97,29 @@ export default function SearchScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <FlatList
-          data={storeState?.authSlice?.data?.users}
+          data={searchTabData?.users}
           showsHorizontalScrollIndicator={false}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <>
-              <UserItem item={item} openModal={openModal} />
+              <UserItem item={item} openModal={handleOtherUser} />
               <Divider />
             </>
           )}
         />
       </ScrollView>
-      <UserSearchModal
+      <OtherUserProfileModal
         isModalVisible={isModalVisible}
         onClose={closeModal}
-        modalData={modalData}
-       
+        userProfileData={userProfileData}
       />
-      <PopUpEdit
-        isDeleteEditModalVisible={isPopupVisible}
+      <EditPopUp
+        isPopupVisible={isPopupVisible}
         position={popupPosition}
         onClose={closePopup}
-        modalData={modalData}
-        editableModa={true}
+        updateModalData={updateModalData}
+        isEditable={true}
         closePopup={closePopup}
+        onPopupClose={closePopup}
       />
     </View>
   );

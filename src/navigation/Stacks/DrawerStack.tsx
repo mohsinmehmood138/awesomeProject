@@ -1,12 +1,12 @@
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import DrawerSettingTab from '../DrawerTabs/drawerSettingTab';
-import DrawerDataTab from '../DrawerTabs/drawerDataTab';
-import TabNavigator from '../../components/primitive/BottomTabs';
-import Icons from 'react-native-vector-icons/Entypo';
-import SettingIcons from 'react-native-vector-icons/Ionicons';
-import Person from 'react-native-vector-icons/Fontisto';
-import CustomDrawerContent from '../../components/complex/Drawer';
 import colors from '../../shared/theme/colors';
+import Icons from 'react-native-vector-icons/Entypo';
+import DrawerDataTab from '../DrawerTabs/drawerDataTab';
+import Person from 'react-native-vector-icons/Fontisto';
+import DrawerSettingTab from '../DrawerTabs/drawerSettingTab';
+import SettingIcons from 'react-native-vector-icons/Ionicons';
+import TabNavigator from '../../components/primitive/BottomTabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import CustomDrawerContent from '../../components/complex/Drawer';
 
 const Drawer = createDrawerNavigator();
 
@@ -27,7 +27,7 @@ function CustomDrawer() {
       <Drawer.Screen
         options={{
           headerShown: false,
-          drawerIcon: ({color, size}) => (
+          drawerIcon: ({ color, size }) => (
             <Icons name="home" size={size} color={color} />
           ),
         }}
@@ -36,7 +36,7 @@ function CustomDrawer() {
       />
       <Drawer.Screen
         options={{
-          drawerIcon: ({color, size}) => (
+          drawerIcon: ({ color, size }) => (
             <Person name="person" size={size} color={color} />
           ),
         }}
@@ -45,7 +45,7 @@ function CustomDrawer() {
       />
       <Drawer.Screen
         options={{
-          drawerIcon: ({color, size}) => (
+          drawerIcon: ({ color, size }) => (
             <SettingIcons name="settings" size={size} color={color} />
           ),
         }}

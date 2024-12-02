@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -9,26 +9,17 @@ import {
   ViewToken,
   ListRenderItemInfo,
 } from 'react-native';
-import {IconButton} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Video from 'react-native-video';
+import { IconButton } from 'react-native-paper';
+import { useRedux } from '../../../hooks/UseRedux';
 import videoData from '../../../shared/utils/MockData/videoData';
-import {useRedux} from '../../../hooks/UseRedux';
-
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface VideoItem {
   id: string;
   title: string;
   thumbnailUrl: string;
-  duration: string;
-  uploadTime: string;
-  views: string;
-  author: string;
   link: string;
-  description: string;
-  subscriber: string;
-  isLive: boolean;
 }
 
 interface ViewableItemsChanged {
@@ -43,27 +34,30 @@ interface VideoRef {
 }
 
 const AppCard: React.FC = () => {
-  const [currentVideoIndex, setCurrentVideoIndex] = useState<number | null>(null);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState<number | null>(
+    null,
+  );
   const videoRefs = useRef<Array<VideoRef | null>>([]);
-  const nextPageIdentifierRef = useRef<string | null>(null);
 
-  const onViewableItemsChanged = useRef(({viewableItems}: ViewableItemsChanged) => {
-    if (viewableItems.length > 0) {
-      const visibleIndex = viewableItems[0].index;
-      if (typeof visibleIndex === 'number') {
-        setCurrentVideoIndex(visibleIndex);
+  const onViewableItemsChanged = useRef(
+    ({ viewableItems }: ViewableItemsChanged) => {
+      if (viewableItems.length > 0) {
+        const visibleIndex = viewableItems[0].index;
+        if (typeof visibleIndex === 'number') {
+          setCurrentVideoIndex(visibleIndex);
+        }
       }
-    }
-  }).current;
+    },
+  ).current;
 
   const viewabilityConfig = {
     itemVisiblePercentThreshold: 50,
   };
 
-  const {storeState} = useRedux();
-  const profileName = storeState?.authSlice?.user?.name;
+  const { user } = useRedux();
+  const profileName = user?.authSlice?.user?.name ?? 'Guest';
 
-  const renderItem = ({item, index}: ListRenderItemInfo<VideoItem>) => (
+  const renderItem = ({ item, index }: ListRenderItemInfo<VideoItem>) => (
     <View style={styles.cardContainer}>
       <View style={styles.topContainer}>
         <Image
@@ -71,21 +65,16 @@ const AppCard: React.FC = () => {
           style={styles.profileImage}
         />
         <Text style={styles.cardName}>{profileName}</Text>
-        <IconButton
-          icon="dots-vertical"
-          size={20}
-          onPress={() => console.log('Menu Pressed')}
-          style={styles.menuIcon}
-        />
+        <IconButton icon="dots-vertical" size={20} style={styles.menuIcon} />
       </View>
 
       <View style={styles.videoContainer}>
         <Text>{item.title}</Text>
         <Video
-          source={{uri: item.link}}
+          source={{ uri: item.link }}
           style={styles.video}
           resizeMode="contain"
-          repeat={true}
+          repeat
           ref={(ref: VideoRef | null) => (videoRefs.current[index] = ref)}
           paused={currentVideoIndex !== index}
           muted={false}
@@ -93,28 +82,23 @@ const AppCard: React.FC = () => {
       </View>
 
       <View style={styles.iconContainer}>
-        <TouchableOpacity style={styles.iconButton}>
-          <Icon name="thumb-up-outline" size={24} color="#000" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
-          <Icon name="share-outline" size={24} color="#000" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
-          <Icon name="comment-outline" size={24} color="#000" />
-        </TouchableOpacity>
+        {['thumb-up-outline', 'share-outline', 'comment-outline'].map(
+          (icon, idx) => (
+            <TouchableOpacity key={idx} style={styles.iconButton}>
+              <Icon name={icon} size={24} color="#000" />
+            </TouchableOpacity>
+          ),
+        )}
       </View>
     </View>
   );
 
-  
-  const typedVideoData: VideoItem[] = videoData as VideoItem[];
-
   return (
     <View>
       <FlatList<VideoItem>
-        data={typedVideoData}
+        data={videoData as VideoItem[]}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
@@ -167,7 +151,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   iconButton: {
     padding: 10,

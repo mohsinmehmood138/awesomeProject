@@ -9,21 +9,24 @@ import {
   ScrollView,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { Card, IconButton } from 'react-native-paper';
 import colors from '../../../shared/theme/colors';
+import { Card, IconButton } from 'react-native-paper';
 
 interface UserInfoProps {
   isModalVisible: boolean;
   onClose: () => void;
-  modalData: any;
-
+  userProfileData: any;
 }
 
-const UserSearchModal: React.FC<UserInfoProps> = ({
+const OtherUserProfileModal: React.FC<UserInfoProps> = ({
   isModalVisible,
-  modalData,
+  userProfileData,
   onClose,
 }) => {
+  useEffect(() => {
+    console.log(userProfileData);
+  }, [userProfileData]);
+
   return (
     <View>
       <Modal isVisible={isModalVisible}>
@@ -34,13 +37,12 @@ const UserSearchModal: React.FC<UserInfoProps> = ({
                 icon="arrow-left"
                 size={24}
                 style={styles.backIcon}
-                onPress={() => console.log('Back Pressed')}
                 onPress={onClose}
               />
 
               <View style={styles.imageContainer}>
                 <Image
-                  source={{ uri: modalData?.profilePic }}
+                  source={{ uri: userProfileData?.profilePic }}
                   style={styles.image}
                 />
               </View>
@@ -59,19 +61,23 @@ const UserSearchModal: React.FC<UserInfoProps> = ({
                 fontWeight: '600',
                 marginVertical: 8,
               }}>
-              @{modalData?.username}
+              @{userProfileData?.username}
             </Text>
             <View style={styles.container}>
               <View style={styles.statsContainer}>
-                <Text style={styles.statNumber}>{modalData?.followers}</Text>
+                <Text style={styles.statNumber}>
+                  {userProfileData?.followers}
+                </Text>
                 <Text style={styles.statLabel}>Following</Text>
               </View>
               <View style={styles.statsContainer}>
-                <Text style={styles.statNumber}>{modalData?.following}</Text>
+                <Text style={styles.statNumber}>
+                  {userProfileData?.following}
+                </Text>
                 <Text style={styles.statLabel}>Followers</Text>
               </View>
               <View style={styles.statsContainer}>
-                <Text style={styles.statNumber}>{modalData?.likes}</Text>
+                <Text style={styles.statNumber}>{userProfileData?.likes}</Text>
                 <Text style={styles.statLabel}>Likes</Text>
               </View>
             </View>
@@ -87,19 +93,14 @@ const UserSearchModal: React.FC<UserInfoProps> = ({
             <View>
               <View style={styles.sliderContainer}>
                 <FlatList
-                  data={modalData?.streakImages}
+                  data={userProfileData?.streakImages}
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   renderItem={({ item, index }) => (
                     <View style={[styles.slide]}>
                       <Image
                         source={{ uri: item }}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'conver',
-                          borderRadius: 100,
-                        }}
+                        style={styles.streakImages}
                       />
                     </View>
                   )}
@@ -109,11 +110,16 @@ const UserSearchModal: React.FC<UserInfoProps> = ({
 
             <ScrollView>
               <View style={styles.wrapContainer}>
-                {modalData?.longImages.map((item: any, index: number) => (
-                  <View key={index} style={styles.item}>
-                    <Image source={{ uri: item }} style={styles.userImageVideo} />
-                  </View>
-                ))}
+                {userProfileData?.longImages?.map(
+                  (item: any, index: number) => (
+                    <View key={index} style={styles.item}>
+                      <Image
+                        source={{ uri: item }}
+                        style={styles.userImageVideo}
+                      />
+                    </View>
+                  ),
+                )}
               </View>
             </ScrollView>
           </Card>
@@ -256,13 +262,18 @@ const styles = StyleSheet.create({
   sliderContainer: {
     alignSelf: 'center',
     marginVertical: 20,
-    // paddingHorizontal: 10,
     width: '90%',
     justifyContent: 'center',
     display: 'flex',
     flexDirection: 'row',
     overflow: 'hidden',
   },
+  streakImages: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    borderRadius: 100,
+  },
 });
 
-export default UserSearchModal;
+export default OtherUserProfileModal;

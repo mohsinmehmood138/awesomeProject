@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CrossIcon from 'react-native-vector-icons/Ionicons';
 
@@ -10,18 +10,16 @@ interface HeaderScript {
   backIcon: any;
 }
 
-const Header: React.FC<HeaderScript> = ({title, name, onPress, backIcon}) => {
+const Header: React.FC<HeaderScript> = ({ title, name, onPress, backIcon }) => {
   return (
     <View style={styles.header}>
       <CrossIcon
         name={backIcon}
         size={30}
-        style={{marginLeft: 20}}
+        style={{ marginLeft: 20 }}
         onPress={onPress}
       />
-
       <Icon name={name} size={20} onPress={onPress} />
-
       <View style={styles.headerTextContainer}>
         <Text style={styles.headerText}>{title}</Text>
       </View>
@@ -37,7 +35,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     elevation: 5,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },

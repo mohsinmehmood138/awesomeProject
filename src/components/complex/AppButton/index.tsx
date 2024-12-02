@@ -1,38 +1,40 @@
-import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import colors from '../../../shared/theme/colors';
-import {FONT_FAMILY} from '../../../shared/theme/fonts';
+import { FONT_FAMILY } from '../../../shared/theme/fonts';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 interface ButtonProps {
   title: string;
   onPress: (text: any) => void;
-  disabled: boolean;
-  style: object;
+  disabled?: boolean;
+  style?: object;
 }
 
-const Button: React.FC<ButtonProps> = ({title, onPress, disabled, style}) => {
+const Button: React.FC<ButtonProps> = ({ title, onPress, disabled, style }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.buttonContainer, style]}
+      >
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
 };
 
-interface LogOutButtonScript {
+interface LogOutButtonProps {
   title: string;
   onPress: () => void;
-  style: object;
+  style?: object;
 }
 
-const LogOutButton: React.FC<LogOutButtonScript> = ({
+const LogOutButton: React.FC<LogOutButtonProps> = ({
   title,
   onPress,
   style,
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.logOutContainer}>
-      <Text style={styles.logoutButtonTetx}>{title}</Text>
+    <TouchableOpacity onPress={onPress} style={[styles.logOutContainer, style]}>
+      <Text style={styles.logoutButtonText}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -47,7 +49,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
   },
-
   logOutContainer: {
     width: '80%',
     backgroundColor: 'black',
@@ -55,11 +56,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
-    fontFamily: FONT_FAMILY.LIGHT,
     alignSelf: 'center',
     marginBottom: 20,
   },
-  logoutButtonTetx: {
+  logoutButtonText: {
     textAlign: 'center',
     color: 'white',
     fontFamily: FONT_FAMILY.MEDIUM,
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {Button, LogOutButton};
+export { Button, LogOutButton };

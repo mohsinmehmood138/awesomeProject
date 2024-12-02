@@ -1,15 +1,14 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Switch, Alert} from 'react-native';
-import BellIcon from 'react-native-vector-icons/Ionicons'; // Using Ionicons for the bell icon
+import React, { useState } from 'react';
 import colors from '../../../shared/theme/colors';
-import {FONT_FAMILY} from '../../../shared/theme/fonts';
+import { FONT_FAMILY } from '../../../shared/theme/fonts';
+import BellIcon from 'react-native-vector-icons/Ionicons';
+import { View, Text, StyleSheet, Switch } from 'react-native';
 
 const NotificationToggle = () => {
   const [isEnabled, setIsEnabled] = useState(false);
 
   const toggleSwitch = () => {
     setIsEnabled(prevState => !prevState);
-    
   };
 
   return (
@@ -24,11 +23,10 @@ const NotificationToggle = () => {
         <Text style={styles.notificationText}>Notifications</Text>
       </View>
       <Switch
-        trackColor={{false: '#767577', true: colors.backgroundColor}}
+        trackColor={{ false: '#767577', true: colors.backgroundColor }}
         thumbColor={isEnabled ? 'white' : 'black'}
         onValueChange={toggleSwitch}
         value={isEnabled}
-        style={styles.switch}
       />
     </View>
   );
@@ -45,15 +43,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 10,
     borderRadius: 10,
-    position:"relative" ,
-    left:5
   },
   iconTextContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  switch: {
-    marginLeft: 20,
   },
   icon: {
     marginRight: 10,

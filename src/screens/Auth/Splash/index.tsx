@@ -1,10 +1,10 @@
 import React, {useEffect, useRef} from 'react';
-import {View, Image, StyleSheet, Animated, Alert} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useRedux} from '../../../hooks/UseRedux';
 import styles from './splashStyle';
-import {RootStackParamList} from '../../../navigation/Types';
+import {useRedux} from '../../../hooks/UseRedux';
+import {View, Image, Animated, } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../../navigation/Types';
 
 interface AuthSlice {
   user: {
@@ -22,10 +22,10 @@ type AuthStackNavigationProp = StackNavigationProp<
 >;
 
 function SplashScreen() {
-  const {storeState, dispatch} = useRedux();
+  const {user} = useRedux();
   const navigation:any = useNavigation<AuthStackNavigationProp>();
 
-  const userCheck: AuthSlice['user'] = storeState?.authSlice?.user;
+  const userCheck: AuthSlice['user'] = user;
   const position = useRef(new Animated.Value(-100)).current;
 
   useEffect(() => {
@@ -51,7 +51,7 @@ function SplashScreen() {
 
     setTimeout(() => {
       if (!userCheck) {
-        navigation.replace('SignUp');
+        navigation.replace('SignIn');
       } else {
         navigation.replace('MainApp' );
       }
