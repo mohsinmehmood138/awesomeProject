@@ -1,10 +1,10 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './splashStyle';
-import {useRedux} from '../../../hooks/UseRedux';
-import {View, Image, Animated, } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../../../navigation/Types';
+import { useRedux } from '../../../hooks/UseRedux';
+import { View, Image, Animated } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../../navigation/Types';
 
 interface AuthSlice {
   user: {
@@ -12,8 +12,6 @@ interface AuthSlice {
     name: string;
     password: string;
   } | null;
-  isAuthenticated: boolean;
-  isAlertOpen: boolean;
 }
 
 type AuthStackNavigationProp = StackNavigationProp<
@@ -22,11 +20,15 @@ type AuthStackNavigationProp = StackNavigationProp<
 >;
 
 function SplashScreen() {
-  const {user} = useRedux();
-  const navigation:any = useNavigation<AuthStackNavigationProp>();
+  const { user, userVisited } = useRedux();
+  const navigation: any = useNavigation<AuthStackNavigationProp>();
 
   const userCheck: AuthSlice['user'] = user;
+
   const position = useRef(new Animated.Value(-100)).current;
+  useEffect(() => {
+    console.log(userVisited);
+  }, [userVisited]);
 
   useEffect(() => {
     const animation = Animated.sequence([
@@ -47,20 +49,22 @@ function SplashScreen() {
       }),
     ]);
 
-    Animated.loop(animation, {iterations: 1}).start();
+    Animated.loop(animation, { iterations: 1 }).start();
 
     setTimeout(() => {
-      if (!userCheck) {
-        navigation.replace('SignIn');
+      if (!userVisited) {
+        navigation.replace('AuthSlider');
+      } else if (!userCheck) {
+        navigation.replace('WelcomeScreen');
       } else {
-        navigation.replace('MainApp' );
+        navigation.replace('MainApp');
       }
     }, 3000);
   }, []);
 
   return (
     <View style={styles.splashContainer}>
-      <Animated.View style={{transform: [{translateY: position}]}}>
+      <Animated.View style={{ transform: [{ translateY: position }] }}>
         <Image
           style={styles.splashImg}
           source={require('../../../assets/images/Splash/splash.png')}

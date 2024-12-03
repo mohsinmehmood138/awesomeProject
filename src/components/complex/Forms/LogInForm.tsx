@@ -56,20 +56,25 @@ const SignInForm: React.FC<SignInFormProps> = ({
   // Facebook Login Handler
   const handleFacebookLogin = async () => {
     try {
-      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+      ]);
       if (!result.isCancelled) {
         const data = await AccessToken.getCurrentAccessToken();
         if (data) {
-          Alert.alert('Login Success', `AccessToken: ${data.accessToken.toString()}`);
+          Alert.alert(
+            'Login Success',
+            `AccessToken: ${data.accessToken.toString()}`,
+          );
         }
       } else {
         Alert.alert('Login cancelled');
       }
-    } catch (error:any) {
+    } catch (error: any) {
       Alert.alert('Login failed', error.message);
     }
   };
-  
 
   const onGoogleButtonPress = async () => {
     try {
@@ -80,11 +85,11 @@ const SignInForm: React.FC<SignInFormProps> = ({
         await auth().signInWithCredential(googleCredential);
         Alert.alert('Login Success', 'Google sign-in completed.');
       }
-    } catch (error:any) {
+    } catch (error: any) {
       Alert.alert('Login failed', error.message);
     }
   };
-  
+
   // Divider Component
   const Divider = () => (
     <View style={styles.dividerContainer}>
@@ -153,14 +158,14 @@ const SignInForm: React.FC<SignInFormProps> = ({
         </View>
 
         {/* Create Account */}
-        <TouchableOpacity
-          style={styles.createAccount}
-          onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.createAccountText}>
-            Don't have an account?{' '}
+        <View style={{flex:1,alignSelf:"center",justifyContent:"center" }}>
+          <Text style={styles.createAccountText}> Don't have an account </Text>
+          <TouchableOpacity
+            style={styles.createAccount}
+            onPress={() => navigation.navigate('SignUp')}>
             <Text style={styles.createAccountLink}>Create Account</Text>
-          </Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -187,8 +192,11 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILY.REGULAR,
   },
   forgotPassword: {
-    alignItems: 'flex-end',
+   alignSelf:"flex-end",
     marginBottom: 24,
+    marginTop:15
+  
+
   },
   forgotPasswordText: {
     color: '#FF3B30',

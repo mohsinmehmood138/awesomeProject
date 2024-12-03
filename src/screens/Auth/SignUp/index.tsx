@@ -1,10 +1,12 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import { View, Image } from 'react-native';
+import { useRedux } from '../../../hooks/UseRedux.tsx';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../navigation/Types';
+import { setVisited } from '../../../redux/authSlice/userSlice.ts';
 import SignUpForm from '../../../components/complex/Forms/SignUpForm.tsx';
 import { useCreateUserMutation } from '../../../redux/authSlice/index.tsx';
 import { SignUpSchema, SignUpValues } from '../../../shared/utils/validation';
@@ -24,10 +26,13 @@ type AuthStackNavigationProp = StackNavigationProp<
 const SignUp = () => {
   const navigation = useNavigation<AuthStackNavigationProp>();
   const [createUser] = useCreateUserMutation();
+  const { dispatch } = useRedux();
 
   const handleSignUp = (values: AuthSlice) => {
-    createUser({values});
+    createUser({ values });
     navigation.navigate('SignIn');
+
+    dispatch(setVisited(true));
   };
 
   return (
