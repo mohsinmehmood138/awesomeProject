@@ -16,6 +16,7 @@ import { RootStackParamList } from '../../../navigation/Types/index.js';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
+
 interface SignInFormProps {
   handleSubmit: (field: any) => any;
   isSubmitting: boolean;
@@ -56,37 +57,37 @@ const SignInForm: React.FC<SignInFormProps> = ({
   // Facebook Login Handler
   const handleFacebookLogin = async () => {
     try {
-      const result = await LoginManager.logInWithPermissions([
-        'public_profile',
-        'email',
-      ]);
+      // Trigger Facebook login with required permissions
+      const result = await LoginManager.logInWithPermissions(['public_profile', 'email', 'pages_show_list']);
+  
       if (!result.isCancelled) {
+        // Retrieve the access token
         const data = await AccessToken.getCurrentAccessToken();
         if (data) {
-          Alert.alert(
-            'Login Success',
-            `AccessToken: ${data.accessToken.toString()}`,
-          );
+          console.log('Login Success', `AccessToken: ${data.accessToken}`);
         }
       } else {
-        Alert.alert('Login cancelled');
+        Alert.alert('Login Cancelled', 'User cancelled the login process.');
       }
-    } catch (error: any) {
-      Alert.alert('Login failed', error.message);
+    } catch (error:any) {
+      Alert.alert('Login Failed', error?.message || 'An unexpected error occurred.');
     }
   };
 
   const onGoogleButtonPress = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const { idToken } = await GoogleSignin.signIn();
-      if (idToken) {
-        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-        await auth().signInWithCredential(googleCredential);
-        Alert.alert('Login Success', 'Google sign-in completed.');
+      const userInfo = await GoogleSignin.signIn();
+      
+
+      if (userInfo) {
+        // Alert.alert('Login Success');
+        // navigation.navigate('MainApp');
+        console.log(userInfo);
+        
       }
-    } catch (error: any) {
-      Alert.alert('Login failed', error.message);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -158,7 +159,8 @@ const SignInForm: React.FC<SignInFormProps> = ({
         </View>
 
         {/* Create Account */}
-        <View style={{flex:1,alignSelf:"center",justifyContent:"center" }}>
+        <View
+          style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
           <Text style={styles.createAccountText}> Don't have an account </Text>
           <TouchableOpacity
             style={styles.createAccount}
@@ -192,11 +194,9 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILY.REGULAR,
   },
   forgotPassword: {
-   alignSelf:"flex-end",
+    alignSelf: 'flex-end',
     marginBottom: 24,
-    marginTop:15
-  
-
+    marginTop: 15,
   },
   forgotPasswordText: {
     color: '#FF3B30',

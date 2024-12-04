@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../../../navigation/BottomTabs/homeTab';
-import UploadImages from '../../../navigation/BottomTabs/walletTab';
+import SocialUpload from '../../../navigation/BottomTabs/socialUpload';
 import SearchScreen from '../../../navigation/BottomTabs/searchTab';
 import SettingScreen from '../../../navigation/BottomTabs/settingTab';
 import ProfileScreen from '../../../navigation/BottomTabs/profileTab';
@@ -46,8 +46,8 @@ export default function TabNavigator() {
             case 'Search':
               iconName = focused ? 'search' : 'search-outline';
               break;
-            case 'add':
-              iconName = focused ? 'add' : 'add-circle-outline';
+            case 'camera':
+              iconName = focused ? 'camera' : 'camera-outline';
               break;
           }
 
@@ -77,7 +77,7 @@ export default function TabNavigator() {
       })}>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="add" component={UploadImages} />
+      <Tab.Screen name="camera" component={SocialUpload} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Settings" component={SettingScreen} />
     </Tab.Navigator>

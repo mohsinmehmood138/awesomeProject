@@ -1,3 +1,4 @@
+import React from 'react';
 import colors from '../../shared/theme/colors';
 import Icons from 'react-native-vector-icons/Entypo';
 import DrawerDataTab from '../DrawerTabs/drawerDataTab';
