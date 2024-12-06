@@ -90,6 +90,7 @@ const PopUpEdit: React.FC<PopUpEditProps> = ({
         onDelete={handleDelete}
         onPopupClose={onPopupClose}
         setDeleteModalVisible={setDeleteModalVisible}
+        updateModalData={updateModalData}
       />
       <UpdateModal
         isVisible={isEditModalVisible}

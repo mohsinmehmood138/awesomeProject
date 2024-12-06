@@ -12,34 +12,35 @@ import { StyleSheet } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import Divider from '../../components/primitive/AppDivider';
 import EditPopUp from '../../components/primitive/Modal/editPopUp';
-import { useGetUserQuery } from '../../redux/searchSlice/searchSlice';
+import {
+  useGetUserQuery,
+  useCreateUserMutation,
+} from '../../redux/searchSlice/searchSlice';
 import OtherUserProfileModal from '../../components/primitive/Modal/usersProfileModal';
 
-
 interface UserItemProps {
-  item: any
+  item: any;
   openModal: (item: any) => void;
 }
 
-
 export default function SearchScreen() {
   const { data } = useGetUserQuery();
+  const [createUser] = useCreateUserMutation();
   const [updateModalData, setUpdateModalData] = useState(null);
-  const [searchTabData,setSearchTabData]=useState<any>([])
+  const [searchTabData, setSearchTabData] = useState<any>([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [userProfileData, setUserProfileData] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
 
-
   useEffect(() => {
     if (data) {
-      setSearchTabData(data)
+      setSearchTabData(data);
     }
   }, [data]);
 
   const handleButtonPress = (event: any, item: any) => {
-   
+    
     const { pageX, pageY } = event.nativeEvent;
     setPopupPosition({ x: pageX, y: pageY });
     setIsPopupVisible(true);
@@ -51,18 +52,16 @@ export default function SearchScreen() {
   };
 
   const handleOtherUser = (item: any) => {
-    setUserProfileData(item)
+    setUserProfileData(item);
     setModalVisible(true);
-    console.log(item);
-    
-
+   
   };
 
   const closeModal = () => {
     setModalVisible(false);
   };
 
-  const UserItem:React.FC<UserItemProps>= ({ item, openModal })=> {
+  const UserItem: React.FC<UserItemProps> = ({ item, openModal }) => {
     return (
       <TouchableOpacity
         style={styles.searchFlatList}
@@ -70,11 +69,11 @@ export default function SearchScreen() {
         <View style={{ flexDirection: 'row' }}>
           <Image
             style={styles.searchFlatListImage}
-            source={{ uri: item.profilePic }}
+            source={{ uri: item.image }}
             alt="Image"
           />
           <View style={{ alignSelf: 'center' }}>
-            <Text style={styles.searchFlatListText}>{item.realName}</Text>
+            <Text style={styles.searchFlatListText}>{item.firstName}</Text>
             <Text style={styles.searchFlatListTextUserId}>
               @{item.username}
             </Text>
@@ -84,7 +83,7 @@ export default function SearchScreen() {
           <IconButton
             icon="dots-vertical"
             size={20}
-            onPress={ (event)=>handleButtonPress(event, item)}
+            onPress={event => handleButtonPress(event, item)}
           />
         </View>
       </TouchableOpacity>

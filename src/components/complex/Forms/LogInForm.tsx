@@ -16,7 +16,6 @@ import { RootStackParamList } from '../../../navigation/Types/index.js';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
-
 interface SignInFormProps {
   handleSubmit: (field: any) => any;
   isSubmitting: boolean;
@@ -58,8 +57,12 @@ const SignInForm: React.FC<SignInFormProps> = ({
   const handleFacebookLogin = async () => {
     try {
       // Trigger Facebook login with required permissions
-      const result = await LoginManager.logInWithPermissions(['public_profile', 'email', 'pages_show_list']);
-  
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+        'pages_show_list',
+      ]);
+
       if (!result.isCancelled) {
         // Retrieve the access token
         const data = await AccessToken.getCurrentAccessToken();
@@ -69,8 +72,11 @@ const SignInForm: React.FC<SignInFormProps> = ({
       } else {
         Alert.alert('Login Cancelled', 'User cancelled the login process.');
       }
-    } catch (error:any) {
-      Alert.alert('Login Failed', error?.message || 'An unexpected error occurred.');
+    } catch (error: any) {
+      Alert.alert(
+        'Login Failed',
+        error?.message || 'An unexpected error occurred.',
+      );
     }
   };
 
@@ -78,13 +84,11 @@ const SignInForm: React.FC<SignInFormProps> = ({
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      
 
       if (userInfo) {
         // Alert.alert('Login Success');
         // navigation.navigate('MainApp');
-        console.log(userInfo);
-        
+      
       }
     } catch (error) {
       console.log(error);

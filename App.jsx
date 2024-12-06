@@ -5,7 +5,7 @@ import { persistor, store } from './src/redux/store';
 import AuthStack from './src/navigation/Stacks/AuthStack';
 import { PersistGate } from 'redux-persist/integration/react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import messaging from '@react-native-firebase/messaging'
+import messaging from '@react-native-firebase/messaging';
 
 const App = () => {
   useEffect(() => {
@@ -19,7 +19,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const fcmToken = await messaging().getToken()
+      const fcmToken = await messaging().getToken();
       console.log('fcm token?>>>>>>', fcmToken);
     })();
   }, []);

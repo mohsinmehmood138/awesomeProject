@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { useDeleteUserMutation } from '../../../redux/searchSlice/searchSlice';
+import { useCreateUserMutation } from '../../../redux/searchSlice/searchSlice';
 
 interface DeleteModalProps {
   isVisible: boolean;
   onCancel: () => void;
+  updateModalData: any;
 
   setDeleteModalVisible: (item: any) => any;
   onDelete: () => void;
@@ -15,10 +18,20 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   onCancel,
   onPopupClose,
   setDeleteModalVisible,
+  updateModalData,
 }) => {
-  const onDelete = () => {
-    onPopupClose();
-    setDeleteModalVisible(false);
+  const [deleteUser] = useDeleteUserMutation();
+
+  const onDelete = async () => {
+    try {
+      const response = await deleteUser(updateModalData?.id).unwrap();
+      // console.log('Delete response:', response);
+      deleteUser(updateModalData?.userId);
+      onPopupClose();
+      setDeleteModalVisible(false);
+    } catch (error) {
+      console.error('Delete error:', error);
+    }
   };
 
   return (

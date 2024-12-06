@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  Linking,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import colors from '../../../shared/theme/colors';
+import BottomSheet from '../BottomSheet/bottomSheet';
 import { Card, IconButton } from 'react-native-paper';
 
 interface UserInfoProps {
@@ -23,9 +25,7 @@ const OtherUserProfileModal: React.FC<UserInfoProps> = ({
   userProfileData,
   onClose,
 }) => {
-  useEffect(() => {
-    console.log(userProfileData);
-  }, [userProfileData]);
+  const refRBSheet = useRef();
 
   return (
     <View>
@@ -42,16 +42,16 @@ const OtherUserProfileModal: React.FC<UserInfoProps> = ({
 
               <View style={styles.imageContainer}>
                 <Image
-                  source={{ uri: userProfileData?.profilePic }}
+                  source={{ uri: userProfileData?.image }}
                   style={styles.image}
                 />
               </View>
 
               <IconButton
-                icon="heart-outline"
+                icon="share"
                 size={24}
                 style={styles.heartIcon}
-                onPress={() => console.log('Favorite pressed!')}
+                onPress={() => refRBSheet.current.open()}
               />
             </View>
             <Text
@@ -65,19 +65,17 @@ const OtherUserProfileModal: React.FC<UserInfoProps> = ({
             </Text>
             <View style={styles.container}>
               <View style={styles.statsContainer}>
-                <Text style={styles.statNumber}>
-                  {userProfileData?.followers}
-                </Text>
+                <Text style={styles.statNumber}>{userProfileData?.weight}</Text>
                 <Text style={styles.statLabel}>Following</Text>
               </View>
               <View style={styles.statsContainer}>
-                <Text style={styles.statNumber}>
-                  {userProfileData?.following}
-                </Text>
+                <Text style={styles.statNumber}>{userProfileData?.age}</Text>
                 <Text style={styles.statLabel}>Followers</Text>
               </View>
               <View style={styles.statsContainer}>
-                <Text style={styles.statNumber}>{userProfileData?.likes}</Text>
+                <Text style={styles.statNumber}>
+                  {userProfileData?.address?.postalCode}
+                </Text>
                 <Text style={styles.statLabel}>Likes</Text>
               </View>
             </View>
@@ -110,21 +108,18 @@ const OtherUserProfileModal: React.FC<UserInfoProps> = ({
 
             <ScrollView>
               <View style={styles.wrapContainer}>
-                {userProfileData?.longImages?.map(
-                  (item: any, index: number) => (
-                    <View key={index} style={styles.item}>
-                      <Image
-                        source={{ uri: item }}
-                        style={styles.userImageVideo}
-                      />
-                    </View>
-                  ),
-                )}
+                <View style={styles.item}>
+                  <Image
+                    source={{ uri: userProfileData?.image }}
+                    style={styles.userImageVideo}
+                  />
+                </View>
               </View>
             </ScrollView>
           </Card>
         </View>
       </Modal>
+      <BottomSheet refRBSheet={refRBSheet} userProfileData={userProfileData} />
     </View>
   );
 };

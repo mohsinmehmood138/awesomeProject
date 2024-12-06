@@ -1,10 +1,10 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 
-const BackIcon = ({size = 30, color = 'black'}) => {
+const BackIcon = ({ size = 30, color = 'black' }) => {
   const navigation = useNavigation();
 
   return (
@@ -17,21 +17,21 @@ const BackIcon = ({size = 30, color = 'black'}) => {
   );
 };
 
-const SocialIcon = ({iconName, backgroundColor, onPress, size = 30}) => (
+const SocialIcon = ({ iconName, backgroundColor, onPress, size = 30 }) => (
   <TouchableOpacity
-    style={[styles.button, {backgroundColor}]}
+    style={[styles.button, { backgroundColor }]}
     onPress={onPress}>
     <Icon name={iconName} size={size} color="white" />
   </TouchableOpacity>
 );
 
 // Specific Social Icons
-const GoogleIcon = ({onPress}) => (
-  <SocialIcon iconName="google" backgroundColor="#DB4437" onPress={onPress}/>
+const GoogleIcon = ({ onPress }) => (
+  <SocialIcon iconName="google" backgroundColor="#DB4437" onPress={onPress} />
 );
 
-const FacebookIcon = ({onPress}) => (
-  <SocialIcon iconName="facebook" backgroundColor="#3b5998" onPress={onPress}/>
+const FacebookIcon = ({ onPress }) => (
+  <SocialIcon iconName="facebook" backgroundColor="#3b5998" onPress={onPress} />
 );
 
 const TwitterIcon = () => (
@@ -40,6 +40,10 @@ const TwitterIcon = () => (
 
 const WindowsIcon = () => (
   <SocialIcon iconName="windows" backgroundColor="#00A4EF" />
+);
+
+const WhatsAppIcon = ({ onPress }) => (
+  <SocialIcon iconName="whatsapp" backgroundColor="green" onPress={onPress} />
 );
 
 const styles = StyleSheet.create({
@@ -53,4 +57,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export {BackIcon, GoogleIcon, FacebookIcon, TwitterIcon, WindowsIcon};
+export {
+  BackIcon,
+  GoogleIcon,
+  FacebookIcon,
+  TwitterIcon,
+  WindowsIcon,
+  WhatsAppIcon,
+};

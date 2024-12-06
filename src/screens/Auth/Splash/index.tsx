@@ -26,9 +26,7 @@ function SplashScreen() {
   const userCheck: AuthSlice['user'] = user;
 
   const position = useRef(new Animated.Value(-100)).current;
-  useEffect(() => {
-    console.log(userVisited);
-  }, [userVisited]);
+
 
   useEffect(() => {
     const animation = Animated.sequence([

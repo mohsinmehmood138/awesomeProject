@@ -3,49 +3,66 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 const searchSlice = createApi({
   reducerPath: 'searchSlice',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://dummyjson.com/c/',
+    baseUrl: 'https://dummyjson.com/',
   }),
 
-  tagTypes: ['Profiles'],
+  tagTypes: ['Products'],
   endpoints: builder => ({
     fetchData: builder.query<any, string>({
       query: endpoint => endpoint,
       providesTags: result =>
-        result ? [{ type: 'Profiles', id: 'LIST' }] : [],
+        result ? [{ type: 'Products', id: 'LIST' }] : [],
+    }),
+
+    createUser: builder.mutation<void, []>({
+      query: product => {
+       
+        return {
+          url: 'product',
+          method: 'POST',
+          body: product,
+        };
+      },
+      invalidatesTags: [{ type: 'Products', id: 'LIST' }],
     }),
 
     deleteUser: builder.mutation<void, string>({
-      query: userId => ({
-        url: `profile/${userId}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: [{ type: 'Profiles', id: 'LIST' }],
+      query: userId => {
+        // console.log('i am user===========>', userId);
+
+        return {
+          url: `users/${userId}`,
+          method: 'DELETE',
+        };
+      },
+      invalidatesTags: [{ type: 'Products', id: 'LIST' }],
     }),
 
     updateUserName: builder.mutation<void, { userId: string; newName: string }>(
       {
         query: ({ userId, newName }) => ({
-          url: `users/${userId}`,
+          url: `products/${userId}`,
           method: 'PATCH',
           body: { realName: newName },
         }),
-        invalidatesTags: [{ type: 'Profiles', id: 'LIST' }],
+        invalidatesTags: [{ type: 'Products', id: 'LIST' }],
       },
     ),
 
     getUser: builder.query<any, void>({
       query: () => ({
-        url: '343b-beae-4fd5-a859',
+        url: `users/`,
         method: 'GET',
       }),
       providesTags: result =>
-        result ? [{ type: 'Profiles', id: 'LIST' }] : [],
+        result ? [{ type: 'Products', id: 'LIST' }] : [],
     }),
   }),
 });
 
 export const {
   useFetchDataQuery,
+  useCreateUserMutation,
   useDeleteUserMutation,
   useUpdateUserNameMutation,
   useGetUserQuery,
